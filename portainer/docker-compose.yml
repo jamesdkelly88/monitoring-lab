@@ -1,0 +1,17 @@
+services:
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:2.21.4-alpine
+    networks:
+    - portainer
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - data:/data
+    restart: unless-stopped
+    ports:
+    - 9443:9443
+networks:
+  portainer:
+    driver: bridge
+volumes:
+  data:
