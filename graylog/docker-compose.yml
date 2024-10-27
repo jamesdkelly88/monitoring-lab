@@ -23,7 +23,7 @@ services:
     restart: unless-stopped
   graylog:
     container_name: graylog
-    image: graylog/graylog:6.0
+    image: graylog/graylog:6.1
     depends_on:
       mongodb:
         condition: service_started
