@@ -1,0 +1,14 @@
+services:
+  netalertx:
+    container_name: netalertx
+    image: jokobsk/netalertx:24.10.12
+    environment:
+    - TZ=${TZ}
+    network_mode: host
+    volumes:
+    - config:/app/config
+    - db:/app/db
+    restart: unless-stopped
+volumes:
+  config:
+  db:

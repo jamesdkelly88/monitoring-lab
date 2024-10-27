@@ -16,6 +16,7 @@ TBC
 | 12201 | Graylog | ? | ? |
 | 13301 | Graylog | ? | ? | 
 | 13302 | Graylog | ? | ? |
+| 20211 | NetAlertX | WebUI | HTTP |
 
 ## Deployment
 
@@ -36,6 +37,13 @@ TBC
 ### Graylog
 
 TBC
+
+### NetAlertX
+
+- Open web UI and update configuration
+    - set password if required
+    - set cidr range and interface for SCAN_SUBNETS
+    - configure notification sender
 
 ### Portainer
 

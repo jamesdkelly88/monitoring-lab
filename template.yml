@@ -1,0 +1,18 @@
+services:
+  name:
+    container_name:
+    image:
+    environment:
+    - 
+    networks:
+    - 
+    volumes:
+    - vol:/mnt
+    restart: unless-stopped
+    ports:
+    - host:container
+networks:
+  name:
+    driver: bridge
+volumes:
+  vol:
