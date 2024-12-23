@@ -1,7 +1,7 @@
 services:
   netalertx:
     container_name: netalertx
-    image: jokobsk/netalertx:24.10.31
+    image: jokobsk/netalertx:24.12.23
     environment:
     - TZ=${TZ}
     network_mode: host
