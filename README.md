@@ -32,6 +32,30 @@ TBC
 - Add each desired stack to Portainer using `Git repository` as the source, and provide the required environment variables from the sample file.
 - Any repository changes can be automatically synced by Portainer (including updates pushed by Renovate)
 
+### Minimal Host
+
+I'm using Alpine Linux as the host for this deployment, because it is very small and lightweight (and my monitoring hardware is an old Dell ThinClient with a 32GB SSD module in).
+
+### Install and enable Docker
+
+```sh
+apk add docker
+apk addgroup <user> docker
+nano /etc/rc.conf # uncomment rc_cgroup_mode="unified"
+rc-update add cgroups
+rc-update add docker boot
+reboot
+```
+
+### Mount USB for data storage
+
+- Partition the USB as ext4 with label `data`
+- `mkdir /data`
+- `chown root:docker /data`
+- `echo "LABEL=data /data ext4 rw,user,nofail 0 0" >> /etc/fstab`
+- `mount -a`
+```
+
 ## Tools
 
 ### Graylog
