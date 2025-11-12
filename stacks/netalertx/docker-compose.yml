@@ -1,0 +1,14 @@
+services:
+  netalertx:
+    container_name: netalertx
+    image: jokobsk/netalertx:25.10.1
+    environment:
+    - TZ=Europe/London
+    volumes:
+    - /data/netalertx/config:/app/config
+    - /data/netalertx/db:/app/db
+    restart: unless-stopped
+networks:
+  default:
+    name: host
+    external: true
