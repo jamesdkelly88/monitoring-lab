@@ -3,7 +3,38 @@ Homelab monitoring configuration
 
 ## Diagram
 
-TBC
+```mermaid
+flowchart TD
+    r["Renovate"]
+    a["Apps"]
+    ado["Azure DevOps"]
+    bws["Bitwarden Secrets Manager"]
+    c["Caddy Reverse Proxy"]
+    cj["Cron Job"]
+    p["Portainer"]
+    gh["Github"]
+    gha["Github Action"]
+    le["LetsEncrypt"]
+    m["Minio"]
+    tf["Terraform"]
+    u["User"]
+    v["Volumes"]
+
+    ado -- Renew --> le
+    le -- Store --> bws
+    tf -- Retrieve --> bws
+    tf -- Add Secrets and Stacks --> p --> a
+    p -- Poll For Changes --> gh
+    gh -- On Merge --> gha
+    gha -- Invoke --> tf
+    u --> c --> a
+    a --> v -- Backup --> m
+    cj -- Update --> p
+    r -- Pull Request --> gh
+
+
+
+```
 
 ## Port mappings
 
@@ -28,10 +59,22 @@ TBC
 
 ### GitOps with Portainer
 
-- Run `docker compose up -d` in `/portainer`, then complete initial configuration on `https://<server>:9443`
-- Add each desired stack to Portainer using `Git repository` as the source, and provide the required environment variables from the sample file.
+- Copy `docker-compose.yml` to target host (into a folder called `portainer`)
+- Run `docker compose up -d`, then complete initial configuration on `https://<server>:9443`
+- Set environment variables
+```sh
+export PORTAINER_ENDPOINT="https://<server>:9443_API_KEY"
+export PORTAINER_API_KEY="<portainer-api-key>"
+export PORTAINER_SKIP_SSL_VERIFY=true
+export BW_ACCESS_TOKEN="<bitwarden-token>"
+export BW_ORGANIZATION_ID="<bitwarden-org-id>"
+export TF_TOKEN_app_terraform_io="<terraform-cloud-team-token>"
+```
+- `cd terraform`
+- `terraform init`
+- `terraform apply`
 - Any repository changes can be automatically synced by Portainer (including updates pushed by Renovate)
-
+scp 
 ### Minimal Host
 
 I'm using Alpine Linux as the host for this deployment, because it is very small and lightweight (and my monitoring hardware is an old Dell ThinClient with a 32GB SSD module in).
@@ -39,12 +82,18 @@ I'm using Alpine Linux as the host for this deployment, because it is very small
 ### Install and enable Docker
 
 ```sh
-apk add docker
+apk add docker docker-compose
 apk addgroup <user> docker
 nano /etc/rc.conf # uncomment rc_cgroup_mode="unified"
 rc-update add cgroups
 rc-update add docker boot
 reboot
+```
+
+### Enable Docker Swarm (required for using secrets)
+
+```sh
+docker swarm init
 ```
 
 ### Mount USB for data storage
