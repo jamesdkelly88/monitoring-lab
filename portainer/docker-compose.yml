@@ -1,7 +1,7 @@
 services:
   portainer:
     container_name: portainer
-    image: portainer/portainer-ce:2.33.3-alpine
+    image: portainer/portainer-ce:2.38.1-alpine
     networks:
     - portainer
     volumes:
