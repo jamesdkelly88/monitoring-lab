@@ -1,0 +1,15 @@
+services:
+  watchyourlan:
+    container_name: watchyourlan
+    image: aceberg/watchyourlan:2.1.4
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      IFACES: eth0
+      TIMEZONE: Europe/London
+      # SHOUTRRR_URL - TODO: set with secret via doco-cd
+    volumes:
+      - data:/data
+
+volumes:
+  data:
