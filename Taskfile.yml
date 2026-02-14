@@ -11,61 +11,16 @@ env:
   DOCKER_GID: '{{.DOCKER_GID}}'
 
 tasks:
-  all-destroy:
+  start-or-update:
     aliases:
-    - destroy-all
-    desc: Run docker compose down on all stacks, including volumes
+    - start
+    - update
+    desc: Start or update doco-cd stack to deploy repository
     cmds:
-    - for: { var: DOCKER_FOLDERS }
-      cmd: docker compose --env-file {{.ENV_FILE}} -f {{.ITEM}}/docker-compose.yml down --volumes
-  
-  all-down:
-    aliases:
-    - down-all
-    desc: Run docker compose down on all stacks, excluding volumes
-    cmds:
-    - for: { var: DOCKER_FOLDERS }
-      cmd: docker compose --env-file {{.ENV_FILE}} -f {{.ITEM}}/docker-compose.yml down
-
-  all-up:
-    aliases:
-    - up-all
-    desc: Run docker compose up on all stacks
-    cmds:
-    - for: { var: DOCKER_FOLDERS }
-      cmd: docker compose --env-file {{.ENV_FILE}} -f {{.ITEM}}/docker-compose.yml up --build -d --remove-orphans
-
+    - docker compose --env-file {{.ENV_FILE}} up --detach --remove-orphans
+    silent: true
   cleanup:
     desc: Delete unused docker images
     cmds:
       - docker image prune -a -f
-      
-  destroy:
-    desc: Destroy stack in current folder, including volumes
-    dir: '{{.USER_WORKING_DIR}}'
-    preconditions:
-      - test -f docker-compose.yml
-    cmds:
-      - docker compose --env-file {{.ENV_FILE}} down --volumes
   
-  down:
-    desc: Destroy stack in current folder, excluding volumes
-    dir: '{{.USER_WORKING_DIR}}'
-    preconditions:
-      - test -f docker-compose.yml
-    cmds:
-      - docker compose --env-file {{.ENV_FILE}} down
-  
-  hello:
-    desc: Hello world task
-    cmds:
-      - echo 'Hello World from Task!'
-    silent: true
-
-  up:
-    desc: Deploy stack in current folder
-    dir: '{{.USER_WORKING_DIR}}'
-    preconditions:
-      - test -f docker-compose.yml
-    cmds:
-      - docker compose --env-file {{.ENV_FILE}} up --build -d --remove-orphans

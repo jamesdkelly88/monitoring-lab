@@ -1,80 +1,65 @@
 # monitoring-lab
-Homelab monitoring configuration
+
+Homelab monitoring configuration using `doco-cd` and `renovate`, with automated discovery
 
 ## Diagram
 
 ```mermaid
 flowchart TD
+    d["doco-cd"]
     r["Renovate"]
     a["Apps"]
-    ado["Azure DevOps"]
-    bws["Bitwarden Secrets Manager"]
     c["Caddy Reverse Proxy"]
-    cj["Cron Job"]
-    p["Portainer"]
     gh["Github"]
-    gha["Github Action"]
-    le["LetsEncrypt"]
-    m["Minio"]
-    tf["Terraform"]
     u["User"]
-    v["Volumes"]
+    k["Uptime Kuma"]
+    ak["Auto Kuma"]
+    n["Apprise"]
+    sl["Slack"]
+    bws["Bitwarden Secrets Manager"]
 
-    ado -- Renew --> le
-    le -- Store --> bws
-    tf -- Retrieve --> bws
-    tf -- Add Secrets and Stacks --> p --> a
-    p -- Poll For Changes --> gh
-    gh -- On Merge --> gha
-    gha -- Invoke --> tf
+    d -- Get Secrets --> bws
+    d -- Poll For Changes --> gh
     u --> c --> a
-    a --> v -- Backup --> m
-    cj -- Update --> p
     r -- Pull Request --> gh
+    d -- Discover and deploy --> a
+    d -- Trigger --> n -- Notify --> sl --> u
+    ak -- Discover --> a
+    ak -- Configure --> k
+    k -- Monitor --> a
+    d -- Discover and deploy --> k
+    d -- Discover and deploy --> ak
+    d -- Discover and deploy --> c
 
 
 
 ```
 
-## Port mappings
+## Deployment
+
+- Clone repository to host
+- Create `.env` file
+- Run `docker compose up --env-file ../.env --detach` in `/doco-cd`
+
+### Env file
+
+```
+TBD - bitwarden and slack secrets
+```
+
+### Port mappings
 
 | Host port | Stack | Usage | Protocol |
 | --- | --- | --- | --- |
-| 5044 | Graylog | ? | ? |
+| 20211 | NetAlertX | WebUI | HTTP |
+<!-- | 5044 | Graylog | ? | ? |
 | 5140 | Graylog | ? | TCP/UDP |
 | 9000 | Graylog | Web UI | HTTP | 
 | 9443 | Portainer | Web UI | HTTPS |
 | 12201 | Graylog | ? | ? |
 | 13301 | Graylog | ? | ? | 
-| 13302 | Graylog | ? | ? |
-| 20211 | NetAlertX | WebUI | HTTP |
+| 13302 | Graylog | ? | ? | -->
 
-## Deployment
-
-### Manual with Task
-
-- Create `.env` file in the root of the repository (or somewhere else, and update the path in `Taskfile.yml`)
-- Populate required variables
-- Run `task up` in a folder, or `task all-up` in the repository to deploy service(s) 
-
-### GitOps with Portainer
-
-- Copy `docker-compose.yml` to target host (into a folder called `portainer`)
-- Run `docker compose up -d`, then complete initial configuration on `https://<server>:9443`
-- Set environment variables
-```sh
-export PORTAINER_ENDPOINT="https://<server>:9443_API_KEY"
-export PORTAINER_API_KEY="<portainer-api-key>"
-export PORTAINER_SKIP_SSL_VERIFY=true
-export BW_ACCESS_TOKEN="<bitwarden-token>"
-export BW_ORGANIZATION_ID="<bitwarden-org-id>"
-export TF_TOKEN_app_terraform_io="<terraform-cloud-team-token>"
-```
-- `cd terraform`
-- `terraform init`
-- `terraform apply`
-- Any repository changes can be automatically synced by Portainer (including updates pushed by Renovate)
-scp 
 ### Minimal Host
 
 I'm using Alpine Linux as the host for this deployment, because it is very small and lightweight (and my monitoring hardware is an old Dell ThinClient with a 32GB SSD module in).
@@ -90,12 +75,6 @@ rc-update add docker boot
 reboot
 ```
 
-### Enable Docker Swarm (required for using secrets)
-
-```sh
-docker swarm init
-```
-
 ### Mount USB for data storage
 
 - Partition the USB as ext4 with label `data`
@@ -103,7 +82,16 @@ docker swarm init
 - `chown root:docker /data`
 - `echo "LABEL=data /data ext4 rw,user,nofail 0 0" >> /etc/fstab`
 - `mount -a`
+- `sudo service docker stop`
+- `sudo mkdir /etc/docker`
+- `sudo nano /etc/docker/daemon.json`:
+```json
+{
+  "data-root": "/data/docker"
+}
 ```
+- `sudo mv /var/lib/docker /data`
+- `sudo service docker start`
 
 ## Tools
 
@@ -117,7 +105,3 @@ TBC
     - set password if required
     - set cidr range and interface for SCAN_SUBNETS
     - configure notification sender
-
-### Portainer
-
-TBC
