@@ -51,6 +51,7 @@ TBD - bitwarden and slack secrets
 
 | Host port | Stack | Usage | Protocol |
 | --- | --- | --- | --- |
+| 8080 | Dozzle | WebUI | HTTP |
 | 20211 | NetAlertX | WebUI | HTTP |
 <!-- | 5044 | Graylog | ? | ? |
 | 5140 | Graylog | ? | TCP/UDP |
@@ -94,6 +95,10 @@ reboot
 - `sudo service docker start`
 
 ## Tools
+
+### Dozzle
+
+Docker log monitoring
 
 ### Graylog
 
