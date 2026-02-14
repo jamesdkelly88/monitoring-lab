@@ -51,6 +51,7 @@ TBD - bitwarden and slack secrets
 
 | Host port | Stack | Usage | Protocol |
 | --- | --- | --- | --- |
+| 8040 | WatchYourLAN | WebUI| HTTP |
 | 8080 | Dozzle | WebUI | HTTP |
 | 20211 | NetAlertX | WebUI | HTTP |
 <!-- | 5044 | Graylog | ? | ? |
@@ -126,3 +127,7 @@ TBC
   - Uncheck `New Device`
   - Ensure `Alert Events` is checked
   - Check `Alert Down` if device should always be online
+
+### WatchYourLan
+
+TBC
