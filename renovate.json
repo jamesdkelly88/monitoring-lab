@@ -6,9 +6,25 @@
   "baseBranches": ["main"],
   "packageRules": [
     {
-      "matchUpdateTypes": ["major"],
-      "matchBaseBranches": ["main"],
-      "enabled": false
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "matchBaseBranches": [
+        "main"
+      ],
+      "automerge": false,
+      "ignoreTests": true
+    },
+    {
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchBaseBranches": [
+        "main"
+      ],
+      "automerge": true,
+      "ignoreTests": true
     }
   ]
 }
