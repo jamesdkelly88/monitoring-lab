@@ -51,8 +51,8 @@ TBD - bitwarden and slack secrets
 
 | Host port | Stack | Usage | Protocol |
 | --- | --- | --- | --- |
-| 8040 | WatchYourLAN | WebUI| HTTP |
 | 8080 | Dozzle | WebUI | HTTP |
+| 8840 | WatchYourLAN | WebUI| HTTP |
 | 20211 | NetAlertX | WebUI | HTTP |
 <!-- | 5044 | Graylog | ? | ? |
 | 5140 | Graylog | ? | TCP/UDP |
@@ -130,4 +130,4 @@ TBC
 
 ### WatchYourLan
 
-TBC
+Open Web UI and configure notification URL
