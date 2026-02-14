@@ -94,6 +94,18 @@ reboot
 - `sudo mv /var/lib/docker /data`
 - `sudo service docker start`
 
+## Slack
+
+(Configuration done with personal email)
+
+- Create App - MonitorBot
+- Create Channel - monitoring
+- Add App to Channel
+- Visit [Slack API config](https://api.slack.com/apps)
+  - Set Features/Incoming Webhooks to `On`
+  - Add new webhook for the monitoring channel
+  - Copy the webhook url
+
 ## Tools
 
 ### Dozzle
@@ -109,4 +121,8 @@ TBC
 - Open web UI and update configuration
     - set password if required
     - set cidr range and interface for SCAN_SUBNETS
-    - configure notification sender
+    - TODO: notifications via apprise-> slack
+- Review devices
+  - Uncheck `New Device`
+  - Ensure `Alert Events` is checked
+  - Check `Alert Down` if device should always be online
